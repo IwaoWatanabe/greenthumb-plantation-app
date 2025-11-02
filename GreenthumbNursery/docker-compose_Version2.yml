@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: greenthumb-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: greenthumb_nursery
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+
+  app-runner:
+    image: openjdk:17-jdk
+    container_name: greenthumb-app-runner
+    depends_on:
+      - db
+    working_dir: /opt/greenthumb
+    volumes:
+      - ./:/opt/greenthumb:ro
+    entrypoint: ["/bin/bash", "/opt/greenthumb/scripts/wait-and-run.sh"]
+    environment:
+      DB_URL: jdbc:mysql://db:3306/greenthumb_nursery
+      DB_USERNAME: root
+      DB_PASSWORD: rootpassword
+
+volumes:
+  db-data:
