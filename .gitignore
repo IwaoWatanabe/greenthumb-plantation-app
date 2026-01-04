@@ -17,3 +17,4 @@ Thumbs.db
 src/main/resources/application.properties
 .env
 *.env
+target/
