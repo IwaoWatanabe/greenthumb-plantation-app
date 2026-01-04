@@ -18,3 +18,5 @@ src/main/resources/application.properties
 .env
 *.env
 target/
+.gradle/
+build/

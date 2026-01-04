@@ -188,3 +188,23 @@ task hello(type: JavaExec) {
   args "aa bb cc".split('\\s+')
 }}
 
+project(':GreenthumbNursery') {
+apply plugin: 'application'
+description 'A comprehensive desktop application for nursery management built with Java Swing and MySQL'
+mainClassName = 'com.greenthumb.GreenthumbNurseryApp'
+sourceCompatibility = '10'
+// targetCompatibility = '1.1'
+dependencies {
+  implementation 'ch.qos.logback:logback-classic:1.4.7'
+  runtimeOnly 'org.slf4j:slf4j-api:2.0.7'
+  runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+  testImplementation 'org.junit.platform:junit-platform:1.9.2'
+}
+jar {
+  manifest {
+    attributes 'Main-Class': mainClassName
+  }
+}}
+
+
