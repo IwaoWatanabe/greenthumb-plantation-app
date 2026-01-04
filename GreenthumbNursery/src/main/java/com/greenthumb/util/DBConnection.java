@@ -18,6 +18,9 @@ public class DBConnection {
 
     // Private constructor to prevent instantiation (Singleton pattern)
     private DBConnection() {}
+    static java.util.ResourceBundle
+    rb = java.util.ResourceBundle.getBundle("gn");
+    static boolean empty(String tt) { return tt == null || tt.length() == 0; }
 
     /**
      * Get database connection instance
@@ -25,13 +28,16 @@ public class DBConnection {
      * @throws SQLException if connection fails
      */
     public static Connection getConnection() throws SQLException {
+        String pre = rb.getString("db-prefix"),
+            driver = rb.getString(pre + ".driver"), url = rb.getString(pre + ".url"),
+            user = rb.getString(pre + ".user"), pass = rb.getString(pre + ".pass");
         try {
             // Load MySQL JDBC driver
-            Class.forName(DRIVER);
-            
+            if (!(empty(driver))) Class.forName(driver);
+
             // Create connection if it doesn't exist or is closed
             if (connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                connection = DriverManager.getConnection(url, user, pass);
                 System.out.println("Database connection established successfully.");
             }
             
@@ -87,7 +93,9 @@ public class DBConnection {
      */
     public static Connection getConnection(String url, String username, String password) throws SQLException {
         try {
-            Class.forName(DRIVER);
+            String pre = rb.getString("db-prefix"),
+                driver = rb.getString(pre + ".driver");
+            if (!(empty(driver))) Class.forName(driver);
             return DriverManager.getConnection(url, username, password);
         } catch (ClassNotFoundException e) {
             System.err.println("MySQL JDBC Driver not found: " + e.getMessage());
@@ -112,7 +120,9 @@ public class DBConnection {
      * @return Database URL
      */
     public static String getDatabaseURL() {
-        return URL;
+        String pre = rb.getString("db-prefix"),
+            url = rb.getString(pre + ".url");        
+        return url;
     }
 
     /**
